@@ -1,9 +1,9 @@
 #!/bin/bash
 # kernel build script by Tkkg1994 v0.6 (optimized from apq8084 kernel source)
 
-export MODEL=chagalllte
+export MODEL=ha3g
 export ARCH=arm
-export BUILD_CROSS_COMPILE=../Toolchain/Toolchain_5.3/bin/arm-cortex-linux-gnueabi-
+export BUILD_CROSS_COMPILE=~/gcc-linaro-5/bin/arm-linux-gnueabi-
 export BUILD_JOB_NUMBER=`grep processor /proc/cpuinfo|wc -l`
 RDIR=$(pwd)
 OUTDIR=$RDIR/arch/$ARCH/boot
@@ -16,11 +16,15 @@ then
 else if [ $MODEL = chagallwifi ]
 then
 	KERNEL_DEFCONFIG=ironstock_chagallwifi_defconfig
+else if [ $MODEL = ha3g ]
+then
+	KERNEL_DEFCONFIG=Angelo_defconfig
 else if [ $MODEL = klimtlte ]
 then
 	KERNEL_DEFCONFIG=ironstock_klimtlte_defconfig
 else [ $MODEL = klimtwifi ]
 	KERNEL_DEFCONFIG=ironstock_klimtwifi_defconfig
+fi
 fi
 fi
 fi
@@ -88,6 +92,13 @@ FUNC_BUILD_RAMDISK()
 		rm -f $RDIR/ramdisk/SM-T705/split_img/boot.img-zImage
 		mv -f $RDIR/arch/$ARCH/boot/boot.img-zImage $RDIR/ramdisk/SM-T705/split_img/boot.img-zImage
 		cd $RDIR/ramdisk/SM-T705
+		./repackimg.sh
+		echo SEANDROIDENFORCE >> image-new.img
+		;;
+	ha3g)
+		rm -f $RDIR/ramdisk/SM-N900/split_img/boot.img-zImage
+		mv -f $RDIR/arch/$ARCH/boot/boot.img-zImage $RDIR/ramdisk/SM-N900/split_img/boot.img-zImage
+		cd $RDIR/ramdisk/SM-N900
 		./repackimg.sh
 		echo SEANDROIDENFORCE >> image-new.img
 		;;
